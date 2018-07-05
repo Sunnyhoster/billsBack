@@ -1,11 +1,15 @@
 from django.shortcuts import render
+from BillsApp.analyze.showpng import *
 from django.http import HttpResponse
+import json
+from BillsApp.analyze.showimage import *
+
 
 # Create your views here.
 
 # 登录函数
 # 方法——post
-# views-/login
+# path-/login/
 # 用户名——username
 # 密码——password
 def login(request):
@@ -13,16 +17,25 @@ def login(request):
         username = request.POST.get('username',None)
         password = request.POST.get('password', None)
         if username and password:
-            pass
+            dict = {'username':username,'password':password}
+            jDict = json.dumps(dict)
+            return HttpResponse(jDict) # test
         else:
-            return HttpResponse('ERROR!')
+            ditc = {'error':'something absent'}
+            jDict = json.dumps(dict)
+            return HttpResponse(jDict)
     else:
-        return HttpResponse('ERROR!')
+        # dict = {'error':'not post'}
+        # jDict = json.dumps(dict)
+        # return HttpResponse(jDict)
+        return render(request, 'login.html') # test
+
+
 
 
 # 注册函数
 # 方法——post
-# views-/register
+# path-/register/
 # 用户名——username
 # 性别——sex
 # 年龄——age
@@ -34,17 +47,23 @@ def register(request):
         age = request.POST.get('age', None)
         password = request.POST.get('password', None)
         if username and password:
-            pass
+            dict = {'username':username,'sex':sex,'age':age,'password':password}
+            jDict = json.dumps(dict)
+            return HttpResponse(jDict) # test
         else:
-            return HttpResponse('ERROR!')
+            dict = {'error':'something absent'}
+            jDict = json.dumps(dict)
+            return HttpResponse(jDict)
     else:
-        return HttpResponse('ERROR!')
-
+        # dict = {'error': 'not post'}
+        # jDict = json.dumps(dict)
+        # return HttpResponse(jDict)
+        return render(request, 'register.html') # test
 # 增删改查
 
 # 查询账单
 # 方法——get
-# views-/bill/list
+# path-/bill/list/
 # | 参数 | 说明           | 默认 | 是否必须 |
 # | ---- | ------------- | ----| --------|
 # | time | 月份，按月份查询| 25   | 是      |
@@ -52,14 +71,21 @@ def getBills(request):
     if request.method == 'GET':
         time = request.GET.get('time', None)
         if time:
-            pass
+            dict = {'time':time}
+            jDict = json.dumps(dict)
+            return HttpResponse(jDict) # test
         else:
-            return HttpResponse('ERROR!')
-    return HttpResponse('ERROR!')
+            dict = {'error':'no time'}
+            jDict = json.dumps(dict)
+            return HttpResponse(jDict)
+    else:
+        dict = {'error':'not get'}
+        jDict = json.dumps(dict)
+        return HttpResponse(jDict)
 
 # 新增账单
 # 方法-post
-# # views-/bill_list/new_bill
+# path-/bill_list/new_bill/
 # | 字段   | 数据类型 | 说明                  | 是否必须 |
 # | ------ | -------- | --------------------- | -------- |
 # | time   | string   | 记账时间              | 是       |
@@ -75,15 +101,23 @@ def addBills(request):
         remark = request.POST.get('type', None)
         mood = request.POST.get('mood', None)
         if time and money and type:
-            pass
+            dict = {'time':time,'money':money,'type':type,'remark':remark,'mood':mood}
+            jDict = json.dumps(dict)
+            return HttpResponse(jDict) # test
         else:
-            return HttpResponse('ERROR!')
+            dict = {'error':'something absent'}
+            jDict = json.dumps(dict)
+            return HttpResponse(jDict)
     else:
-        return HttpResponse('ERROR!')
+        # dict = {'error': 'not post'}
+        # jDict = json.dumps(dict)
+        # return HttpResponse(jDict)
+        return render(request, 'addBills.html') # test
+
 
 # 修改账单
 # 方法-post
-# views-/bill_list/update_bill
+# path-/bill_list/update_bill/
 # | 字段       | 数据类型 | 说明                           | 是否必须 |
 # | ---------- | -------- | ------------------------------ | -------- |
 # | time       | string   | 记账时间，具体到日             | 是       |
@@ -104,15 +138,23 @@ def updateBills(request):
         new_type = request.POST.get('new_type', None)
         new_remark = request.POST.get('new_remark', None)
         if time and money and type and order:
-            pass
+            dict = {'time':time,'money':money,'type':type,'order':order}
+            jDict = json.dumps(dict)
+            return HttpResponse(jDict) # test
         else:
-            return HttpResponse('ERROR!')
+            dict = {'error': 'something absent'}
+            jDict = json.dumps(dict)
+            return HttpResponse(jDict)
     else:
-        return HttpResponse('ERROR!')
+        # dict = {'error': 'not post'}
+        # jDict = json.dumps(dict)
+        # return HttpResponse(jDict)
+        return render(request, 'updateBills.html') # test
+
 
 # 删除账单
 # 方法-post
-# views-/bill-list/delete_bill
+# path-/bill-list/delete_bill/
 # | 参数  | 说明                         | 是否必须 |
 # | ----- | ---------------------------- | -------- |
 # | time  | 要删除的账单的时间           | 是       |
@@ -126,10 +168,88 @@ def deleteBills(request):
         type = request.POST.get('type', None)
         order = request.POST.get('order', None)
         if time and money and type:
-            pass
+            dict = {'time':time,'money':money,'type':type}
+            jDict = json.dumps(dict)
+            return HttpResponse(jDict)# test
         else:
-            return HttpResponse('ERROR!')
+            dict = {'error': 'something absent'}
+            jDict = json.dumps(dict)
+            return HttpResponse(jDict)
     else:
-        return HttpResponse('ERROR!')
+        # dict = {'error': 'not post'}
+        # jDict = json.dumps(dict)
+        # return HttpResponse(jDict)
+        return render(request, 'deleteBills.html') # test
 
 
+# 画图并发送
+# 方法-post
+# path-/image/
+# |参数             说明     是否必须   数据类型
+# |------------------------------------------
+# |filename       返回图片名   是      string
+# |coordinate_x   x坐标对象    是      string
+# |coordinate_y   y坐标对象    是      string
+# |type           数据图类型   是      string
+# |color          颜色        否      string
+# |date_start     开始日期     是      string
+# |date_end       结束日期     是      string
+# x,y坐标对象只可从['time','money','type']中选择
+# type只可从['bar','line','pie']中选择，分别对应柱状图、折线图、饼图
+# color只可从['red','blue','green','gray','black','yellow','purple','orange']中选择，其中饼图color无效，柱状图和折线图必须要color
+# date_start 和 date_end 与 time 同一格式
+l = [
+    [0,1,2,3,4,5,6,7,8,9],
+    [23,4,3,5,46,7,34,67,8,12]
+]
+
+def sendImage(request):
+    if request.method == 'POST':
+        filename = request.POST.get('filename', None)
+        coordinate_x = request.POST.get('coordinate_x', None)
+        coordinate_y = request.POST.get('coordinate_y', None)
+        type = request.POST.get('type', None)
+        color = request.POST.get('color', None)
+        date_start = request.POST.get('date_start', None)
+        date_end = request.POST.get('date_end', None)
+        if filename and coordinate_x and coordinate_y and type and date_start and date_end:
+            if coordinate_x in ['time','money','type'] and coordinate_y in ['time','money','type']:
+                if type in ['bar','line','pie']:
+                    if type == 'pie':
+                        # savePng(dataList2d=?,filename, type, xLabel=coordinate_x, yLabel=coordinate_y, color=color)
+                        # return sendImage(filename)
+                        savePng(l, filename, type, xLabel = coordinate_x, yLabel = coordinate_y, color = color)
+                        return showImage(filename) # test
+                    else:
+                        if color in ['red','blue','green','gray','black','yellow','purple','orange']:
+                            # savePng(dataList2d=?,filename, type, xLabel=coordinate_x, yLabel=coordinate_y, color=color)
+                            # return sendImage(filename)
+                            savePng(l, filename, type, xLabel=coordinate_x, yLabel=coordinate_y, color=color)
+                            return showImage(filename) # test
+                        else:
+                            dict = {'error': 'color error'}
+                            jDict = json.dumps(dict)
+                            return HttpResponse(jDict)
+                else:
+                    dict = {'error': 'type error'}
+                    jDict = json.dumps(dict)
+                    return HttpResponse(jDict)
+            else:
+                dict = {'error': 'coordinate error'}
+                jDict = json.dumps(dict)
+                return HttpResponse(jDict)
+        else:
+            dict = {'error': 'something absent'}
+            jDict = json.dumps(dict)
+            return HttpResponse(jDict)
+    else:
+        # dict = {'error': 'not post'}
+        # jDict = json.dumps(dict)
+        # return HttpResponse(jDict)
+        return render(request, 'sendImage.html')
+
+'''
+def sendImage(request):
+    savePng(l, 'xxx', 'line')
+    return showImage('xxx')
+'''

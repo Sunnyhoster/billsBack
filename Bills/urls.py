@@ -23,7 +23,8 @@ urlpatterns = [
     url('login/', views.login),
     url('register/', views.register),
     url('bill/list/', views.getBills),
-    url('bill_list/new_bill', views.addBills),
-    url('bill_list/update_bill', views.updateBills),
-    url('bill_list/delete_bill', views.deleteBills),
+    url('bill_list/new_bill/', views.addBills),
+    url('bill_list/update_bill/', views.updateBills),
+    url('bill_list/delete_bill/', views.deleteBills),
+    url('image/', views.sendImage),
 ]

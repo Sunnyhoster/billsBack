@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>send image</title>
+</head>
+<body>
+<form action="sendImage.html" method="post">
+    <p>
+        <label>文件名：</label>
+        <input name="filename" type="text" />
+    </p>
+    <p>
+        <label>x坐标：</label>
+        <input name="coordinate_x" type="radio" value="time" />time
+        <input name="coordinate_x" type="radio" value="money" />money
+        <input name="coordinate_x" type="radio" value="type" />type
+        <input name="coordinate_x" type="radio" value="other" />other
+    </p>
+    <p>
+        <label>y坐标：</label>
+        <input name="coordinate_y" type="radio" value="time" />time
+        <input name="coordinate_y" type="radio" value="money" />money
+        <input name="coordinate_y" type="radio" value="type" />type
+        <input name="coordinate_y" type="radio" value="other" />other
+    </p>
+    <p>
+        <label>类型：</label>
+        <input name="type" type="radio" value="bar" />bar
+        <input name="type" type="radio" value="line" />line
+        <input name="type" type="radio" value="pie" />pie
+        <input name="type" type="radio" value="other" />other
+    </p>
+    <p>
+        <label>颜色：</label>
+        <input name="color" type="radio" value="red" />red
+        <input name="color" type="radio" value="blue" />blue
+        <input name="color" type="radio" value="green" />green
+        <input name="color" type="radio" value="gray" />gray
+        <input name="color" type="radio" value="black" />black
+        <input name="color" type="radio" value="yellow" />yellow
+        <input name="color" type="radio" value="purple" />purple
+        <input name="color" type="radio" value="orange" />orange
+        <input name="color" type="radio" value="other" />other
+    </p>
+    <p>
+        <label>开始日期：</label>
+        <input name="date_start" type="text" />
+    </p>
+    <p>
+        <label>结束日期：</label>
+        <input name="date_end" type="text" />
+    </p>
+    <p>
+        <input type="submit" value="提交">
+    </p>
+</form>
+</body>
+</html>
