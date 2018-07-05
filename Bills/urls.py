@@ -27,4 +27,5 @@ urlpatterns = [
     url('bill_list/update_bill/', views.updateBills),
     url('bill_list/delete_bill/', views.deleteBills),
     url('image/', views.sendImage),
+    url('prediction/', views.consumePrediction),
 ]

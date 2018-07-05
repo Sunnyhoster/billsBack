@@ -3,7 +3,7 @@ from BillsApp.analyze.showpng import *
 from django.http import HttpResponse
 import json
 from BillsApp.analyze.showimage import *
-
+from prediction.showTypeMoney import *
 
 # Create your views here.
 
@@ -247,9 +247,51 @@ def sendImage(request):
         # jDict = json.dumps(dict)
         # return HttpResponse(jDict)
         return render(request, 'sendImage.html')
-
-'''
-def sendImage(request):
-    savePng(l, 'xxx', 'line')
-    return showImage('xxx')
-'''
+# 消费分析预测
+# 方法-get
+# path-/prediction/
+# 参数：username
+# | 字段   | 数据类型 | 说明 |
+# | ------ | -------- | ---- |
+# | top1 | string   |用户最喜欢的消费类型 |
+# | top2 | string   |用户第二喜欢的消费类型 |
+# | top3 | string   |用户第三喜欢的消费类型 |
+# | bottom1 | string   |用户最不喜欢的消费类型 |
+# | bottom2 | string   |用户第二不喜欢的消费类型 |
+# | bottom3 | string   |用户第三不喜欢的消费类型 |
+# | top1_money | string   |用户最喜欢的消费类型对应金额 |
+# | top2_money  | string   |用户第二喜欢的消费类型对应金额 |
+# | top3_money  | string   |用户第三喜欢的消费类型对应金额 |
+# | bottom1_money | string   |用户最不喜欢的消费类型对应金额 |
+# | bottom2_money | string   |用户第二不喜欢的消费类型对应金额 |
+# | bottom3_money | string   |用户第三不喜欢的消费类型对应金额 |
+def consumePrediction(request):
+    if request.method == 'GET':
+        username = request.GET.get('username', None)
+        if username:
+            top3, bottom3 = showType()
+            d = showMoney()
+            dict = {}
+            dict['top1_money'] = d[top3[0]]
+            dict['top2_money'] = d[top3[1]]
+            dict['top3_money'] = d[top3[2]]
+            dict['bottom1_money'] = d[bottom3[0]]
+            dict['bottom2_money'] = d[bottom3[1]]
+            dict['bottom3_money'] = d[bottom3[2]]
+            top3, bottom3 = [str(val) for val in top3], [str(val) for val in bottom3]
+            dict['top1'] = top3[0]
+            dict['top2'] = top3[1]
+            dict['top3'] = top3[2]
+            dict['bottom1'] = bottom3[0]
+            dict['bottom2'] = bottom3[1]
+            dict['bottom3'] = bottom3[2]
+            jDict = json.dumps(dict)
+            return HttpResponse(jDict)
+        else:
+            dict = {'error':'no username'}
+            jDict = json.dumps(dict)
+            return HttpResponse(jDict)
+    else:
+        dict = {'error':'not get'}
+        jDict = json.dumps(dict)
+        return HttpResponse(jDict)
