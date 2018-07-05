@@ -4,6 +4,7 @@ from django.http import HttpResponse
 import json
 from BillsApp.analyze.showimage import *
 from prediction.showTypeMoney import *
+from BillsApp.models import *
 
 # Create your views here.
 
@@ -67,15 +68,17 @@ def register(request):
 # | 参数 | 说明           | 默认 | 是否必须 |
 # | ---- | ------------- | ----| --------|
 # | time | 月份，按月份查询| 25   | 是      |
+# | username | 用户名 |   | 是       |
 def getBills(request):
     if request.method == 'GET':
         time = request.GET.get('time', None)
-        if time:
-            dict = {'time':time}
+        username = request.GET.get('username', None)
+        if time and username:
+            dict = {'time':time,'username':username}
             jDict = json.dumps(dict)
             return HttpResponse(jDict) # test
         else:
-            dict = {'error':'no time'}
+            dict = {'error':'something absent'}
             jDict = json.dumps(dict)
             return HttpResponse(jDict)
     else:
@@ -88,6 +91,7 @@ def getBills(request):
 # path-/bill_list/new_bill/
 # | 字段   | 数据类型 | 说明                  | 是否必须 |
 # | ------ | -------- | --------------------- | -------- |
+# | username   | string   | 用户名              | 是       |
 # | time   | string   | 记账时间              | 是       |
 # | money  | string   | 金额                  | 是       |
 # | type   | string   | 账目类型              | 是       |
@@ -95,13 +99,14 @@ def getBills(request):
 # | mood   | string   | 心情级别(分1、2、3级) | 否       |
 def addBills(request):
     if request.method == 'POST':
+        username = request.POST.get('username', None)
         time = request.POST.get('time', None)
         money = request.POST.get('money', None)
         type = request.POST.get('type', None)
         remark = request.POST.get('type', None)
         mood = request.POST.get('mood', None)
-        if time and money and type:
-            dict = {'time':time,'money':money,'type':type,'remark':remark,'mood':mood}
+        if time and money and type and username:
+            dict = {'time':time,'money':money,'type':type,'remark':remark,'mood':mood, 'username':username}
             jDict = json.dumps(dict)
             return HttpResponse(jDict) # test
         else:
@@ -120,25 +125,25 @@ def addBills(request):
 # path-/bill_list/update_bill/
 # | 字段       | 数据类型 | 说明                           | 是否必须 |
 # | ---------- | -------- | ------------------------------ | -------- |
+# | username       | string   | 用户名             | 是       |
 # | time       | string   | 记账时间，具体到日             | 是       |
 # | money      | string   | 金额                           | 是       |
 # | type       | string   | 记账类型                       | 是       |
-# | order      | string   | 以上信息相同的账单之中的第几个 | 是       |
 # | new_money  | string   | 更新的金额                     | 否       |
 # | new_type   | string   | 更新的账目类型                 | 否       |
 # | new_remark | string   | 更新的备注                     | 否       |
 
 def updateBills(request):
     if request.method == 'POST':
+        username = request.POST.get('username', None)
         time = request.POST.get('time', None)
         money = request.POST.get('money', None)
         type = request.POST.get('type', None)
-        order = request.POST.get('type', None)
         new_money = request.POST.get('new_money', None)
         new_type = request.POST.get('new_type', None)
         new_remark = request.POST.get('new_remark', None)
-        if time and money and type and order:
-            dict = {'time':time,'money':money,'type':type,'order':order}
+        if time and money and type and username:
+            dict = {'time':time,'money':money,'type':type,'username':username}
             jDict = json.dumps(dict)
             return HttpResponse(jDict) # test
         else:
@@ -157,18 +162,18 @@ def updateBills(request):
 # path-/bill-list/delete_bill/
 # | 参数  | 说明                         | 是否必须 |
 # | ----- | ---------------------------- | -------- |
+# | username  | 用户名           | 是       |
 # | time  | 要删除的账单的时间           | 是       |
 # | money | 金额                         | 是       |
 # | type  | 账目类型                     | 是       |
-# | order | 以上信息相同的账单中的第几个 | 否       |
 def deleteBills(request):
     if request.method == 'POST':
+        username = request.POST.get('username', None)
         time = request.POST.get('time', None)
         money = request.POST.get('money', None)
         type = request.POST.get('type', None)
-        order = request.POST.get('order', None)
-        if time and money and type:
-            dict = {'time':time,'money':money,'type':type}
+        if time and money and type and username:
+            dict = {'time':time,'money':money,'type':type,'username':username}
             jDict = json.dumps(dict)
             return HttpResponse(jDict)# test
         else:
@@ -185,15 +190,16 @@ def deleteBills(request):
 # 画图并发送
 # 方法-post
 # path-/image/
-# |参数             说明     是否必须   数据类型
-# |------------------------------------------
-# |filename       返回图片名   是      string
-# |coordinate_x   x坐标对象    是      string
-# |coordinate_y   y坐标对象    是      string
-# |type           数据图类型   是      string
-# |color          颜色        否      string
-# |date_start     开始日期     是      string
-# |date_end       结束日期     是      string
+# |参数          |   说明    | 是否必须  | 数据类型 |
+# |--------------|----------|---------|---------|
+# |username      | 用户名 |  是    |  string|
+# |filename      | 返回图片名 |  是    |  string|
+# |coordinate_x  | x坐标对象  |  是    |  string|
+# |coordinate_y  | y坐标对象   | 是    |  string|
+# |type          | 数据图类型 |  是    |  string|
+# |color         | 颜色       | 否     | string|
+# |date_start    | 开始日期    | 是    |  string|
+# |date_end      | 结束日期   |  是    |  string|
 # x,y坐标对象只可从['time','money','type']中选择
 # type只可从['bar','line','pie']中选择，分别对应柱状图、折线图、饼图
 # color只可从['red','blue','green','gray','black','yellow','purple','orange']中选择，其中饼图color无效，柱状图和折线图必须要color
@@ -205,6 +211,7 @@ l = [
 
 def sendImage(request):
     if request.method == 'POST':
+        username = request.POST.get('username', None)
         filename = request.POST.get('filename', None)
         coordinate_x = request.POST.get('coordinate_x', None)
         coordinate_y = request.POST.get('coordinate_y', None)
@@ -212,7 +219,7 @@ def sendImage(request):
         color = request.POST.get('color', None)
         date_start = request.POST.get('date_start', None)
         date_end = request.POST.get('date_end', None)
-        if filename and coordinate_x and coordinate_y and type and date_start and date_end:
+        if filename and coordinate_x and coordinate_y and type and date_start and date_end and username:
             if coordinate_x in ['time','money','type'] and coordinate_y in ['time','money','type']:
                 if type in ['bar','line','pie']:
                     if type == 'pie':
@@ -295,3 +302,7 @@ def consumePrediction(request):
         dict = {'error':'not get'}
         jDict = json.dumps(dict)
         return HttpResponse(jDict)
+
+def testM(request):
+    testModels('aaa')
+    return HttpResponse('bbb')# 测试models
