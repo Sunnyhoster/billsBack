@@ -4,8 +4,6 @@ from django.http import HttpResponse
 import json
 from BillsApp.analyze.showimage import *
 from prediction.showTypeMoney import *
-from BillsApp.models import *
-from BillsApp.test import *
 
 # Create your views here.
 
@@ -303,7 +301,3 @@ def consumePrediction(request):
         dict = {'error':'not get'}
         jDict = json.dumps(dict)
         return HttpResponse(jDict)
-
-def testM(request):
-    testModels('aaa')
-    return HttpResponse('bbb')# 测试models

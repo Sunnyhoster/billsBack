@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.neural_network import MLPRegressor
 import operator
 
-data_csv = pd.read_csv('./prediction/simulation.csv')
+data_csv = pd.read_csv('./prediction/simulation_2.csv')
 
 moneyList = list([int(val) for val in data_csv['money']])
 typeList = list([int(val) for val in data_csv['type']])

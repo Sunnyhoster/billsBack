@@ -12,8 +12,8 @@ def showBar(dataList2d, xLabel='x', yLabel='y',color='blue'):
     x = dataList2d[0]
     y = dataList2d[1]
     plt.bar(x,y,fc=color)
-    plt.xlabel(xLabel,size=20)
-    plt.ylabel(yLabel,size=20)
+    plt.xlabel(xLabel,size=15)
+    plt.ylabel(yLabel,size=15)
     plt.title('bar',size=30)
 
 
@@ -21,8 +21,8 @@ def showLine(dataList2d, xLabel='x', yLabel='y',color='blue'):
     x = dataList2d[0]
     y = dataList2d[1]
     plt.plot(x,y,color=color,linewidth=5)
-    plt.xlabel(xLabel, size=20)
-    plt.ylabel(yLabel, size=20)
+    plt.xlabel(xLabel, size=15)
+    plt.ylabel(yLabel, size=15)
     plt.title('line', size=30)
 
 def showPie(dataList2d):
