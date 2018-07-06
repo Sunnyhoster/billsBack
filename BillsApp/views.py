@@ -5,6 +5,7 @@ import json
 from BillsApp.analyze.showimage import *
 from prediction.showTypeMoney import *
 from BillsApp.models import *
+from BillsApp.test import *
 
 # Create your views here.
 
@@ -295,7 +296,7 @@ def consumePrediction(request):
             jDict = json.dumps(dict)
             return HttpResponse(jDict)
         else:
-            dict = {'error':'no username'}
+            dict = {'error':'something absent'}
             jDict = json.dumps(dict)
             return HttpResponse(jDict)
     else:
