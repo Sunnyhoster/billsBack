@@ -478,21 +478,66 @@ def writeOffUser(request):
 # 注销功能正常
 
 
+
+# 从云端同步数据
+# 方法——get
+# path-/synchronize/
+# | 参数 | 说明          | 是否必须 |
+# | ---- | -------------| --------|
+# | username | 用户名   | 是       |
+def synchronizeBills(request):
+    if request.method == 'GET':
+        username = str(request.GET.get('username', None))
+        if username:
+            dictList = fun.allBills(username)
+            if dictList == 0:
+                dict = {'error': 'bills do not exist'}
+                jDict = json.dumps(dict)
+                return HttpResponse(jDict)
+            else:
+                if len(dictList) == 0:
+                    dict = {'error': 'bills do not exist'}
+                    jDict = json.dumps(dict)
+                    return HttpResponse(jDict)
+                else:
+                    jList = json.dumps(dictList)
+                    return HttpResponse(jList)
+        else:
+            dict = {'error': 'something absent'}
+            jDict = json.dumps(dict)
+            return HttpResponse(jDict)
+    else:
+        dict = {'error': 'not get'}
+        jDict = json.dumps(dict)
+        return HttpResponse(jDict)
+# 同步功能测试正常
+
+
+
 # 数据初始化
 def init(request):
-    data_simulation = pd.read_csv('./prediction/simulation_1.csv')
+    user_1 = request.GET.get('user1', None)
+    user_2 = request.GET.get('user2', None)
+    data_simulation_1 = pd.read_csv('./prediction/simulation_1.csv')
+    data_simulation_2 = pd.read_csv('./prediction/simulation_2.csv')
     data_user = pd.read_csv('./prediction/users.csv')
-    timeList = data_simulation['time']
-    moneyList = data_simulation['money']
-    typeList = data_simulation['type']
-    moodList = data_simulation['mood']
-    remarkList = data_simulation['remark']
+    timeList_1 = data_simulation_1['time']
+    moneyList_1 = data_simulation_1['money']
+    typeList_1 = data_simulation_1['type']
+    moodList_1 = data_simulation_1['mood']
+    remarkList_1 = data_simulation_1['remark']
+    timeList_2 = data_simulation_2['time']
+    moneyList_2 = data_simulation_2['money']
+    typeList_2 = data_simulation_2['type']
+    moodList_2 = data_simulation_2['mood']
+    remarkList_2 = data_simulation_2['remark']
     usernameList = data_user['username']
     passwordList = data_user['password']
     sexList = data_user['sex']
     ageList = data_user['age']
 
-    m = len(timeList)
+    m_1 = len(timeList_1)
+    m_2 = len(timeList_2)
     n = len(usernameList)
 
     for i in range(n):
@@ -501,9 +546,20 @@ def init(request):
         )
         addPeople.save()
 
-    for i in range(m):
+    user = UserInfo.objects.get(username=user_1)
+    for i in range(m_1):
         addBills = OnesBills(
-            time=timeList[i], money=moneyList[i], type=typeList[i], mood=moodList[i], remark=remarkList[i],
-            host=UserInfo.objects.get(id=40)
+            time=timeList_1[i], money=moneyList_1[i], type=typeList_1[i], mood=moodList_1[i], remark=remarkList_1[i],
+            host=UserInfo.objects.get(id=user.id)
         )
         addBills.save()
+
+    user = UserInfo.objects.get(username=user_2)
+    for i in range(m_2):
+        addBills = OnesBills(
+            time=timeList_2[i], money=moneyList_2[i], type=typeList_2[i], mood=moodList_2[i], remark=remarkList_2[i],
+            host=UserInfo.objects.get(id=user.id)
+        )
+        addBills.save()
+    return HttpResponse('Done')
+# 初始化功能正常

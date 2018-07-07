@@ -29,5 +29,6 @@ urlpatterns = [
     url('image/', views.sendImage),
     url('prediction/', views.consumePrediction),
     url('writeoff/',views.writeOffUser),
+    url('synchronize/', views.synchronizeBills),
     url('init/',views.init),
 ]

@@ -20,10 +20,10 @@
 
 ###### 参数说明
 
-| 参数 | 说明             | 默认 | 是否必须 |
-| ---- | ---------------- | ---- | -------- |
-| time | 月份，按月份查询 | 25   | 是       |
-| username | 用户名 |   | 是       |
+| 参数 | 说明             | 是否必须 |
+| ---- | ---------------- | -------- |
+| time | 月份，按月份查询 | 是       |
+| username | 用户名 | 是       |
 
 ###### 样例
 
@@ -39,16 +39,15 @@
 [
 	{
         "time":"20170701",
-        "money":"200",
-        "type":"学习",
+        "money":"-200",
+        "type":"6",
         "remark":"买了CSAPP",
         "mood":"1"
     },
     {
         "time":"20170702",
         "money":"100",
-        "type":"餐饮",
-        "remark":"吃撑了",
+        "type":"-1",
         "mood":"2"
     }
 ]
@@ -121,8 +120,8 @@
 {
     "username":"xxx",
  	"time":"20170701",
-    "money":"200",
-    "type":"学习",
+    "money":"-200",
+    "type":"5",
     "remark":"买了CSAPP",
     "mood":"1"
 }
@@ -207,8 +206,8 @@
 {
     "username":"xxx",
 	"time":"20170512",
-    "money":"100",
-    "type":"学习",
+    "money":"-100",
+    "type":"3",
     "order":"1",
     "new_money":"120"
 }
@@ -645,3 +644,86 @@
 | error | something absent      | string   | post部分数据缺失 |
 | error | not get               | string   | 方法不是get      |
 | error | username do not exist | string   | 用户名不存在     |
+
+## 从云端同步数据
+
+#### HTTP Method
+
+```http
+[GET]
+```
+
+#### Path
+
+```http
+/synchronize/
+```
+
+###### 参数说明
+
+| 参数     | 说明   | 是否必须 |
+| -------- | ------ | -------- |
+| username | 用户名 | 是       |
+
+###### 样例
+
+```http
+/synchronize/?username=aaa
+```
+
+### Response
+
+###### 实例:
+
+```json
+[
+	{
+        "time":"20170701",
+        "money":"-200",
+        "type":"2",
+        "remark":"买了CSAPP",
+        "mood":"1"
+    },
+    {
+        "time":"20170702",
+        "money":"-100",
+        "type":"3",
+        "remark":"吃撑了",
+        "mood":"2"
+    }
+]
+```
+
+#### 字段说明:
+
+| 字段   | 数据类型 | 说明                  | 可否为空 |
+| ------ | -------- | --------------------- | -------- |
+| time   | string   | 记账时间              | 否       |
+| money  | string   | 金额                  | 否       |
+| type   | string   | 账目类型              | 否       |
+| remark | string   | 备注                  | 是       |
+| mood   | string   | 心情级别(分1、2、3级) | 是       |
+
+#### 错误反馈
+
+```json
+{
+    "error":"something absent"
+}
+
+{
+    "error":"not get"
+}
+
+{
+    "error":"bills do not exist"
+}
+```
+
+#### 字段说明
+
+| 字段  | 属性               | 数据类型 | 说明             |
+| ----- | ------------------ | -------- | ---------------- |
+| error | something absent   | string   | post部分数据缺失 |
+| error | not get            | string   | 方法不是get      |
+| error | bills do not exist | string   | 查找的账单不存在 |
