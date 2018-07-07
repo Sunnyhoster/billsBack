@@ -33,6 +33,7 @@ def showPie(dataList2d):
 
 
 def savePng(dataList2d, filename, type, xLabel='x', yLabel='y', color='blue'):
+    plt.close('all')
     if type == 'bar':
         showBar(dataList2d, xLabel=xLabel, yLabel=yLabel, color=color)
     elif type == 'line':
@@ -40,4 +41,82 @@ def savePng(dataList2d, filename, type, xLabel='x', yLabel='y', color='blue'):
     elif type == 'pie':
         showPie(dataList2d)
     plt.savefig('./BillsApp/analyze/images/'+filename+'.png')
+
+
+def toDataList2d(dictList, coordiante_x, coordinate_y, io):
+    dataList2d = []
+    if (coordiante_x, coordinate_y) == ('time', 'money'):
+        x = []
+        y = []
+        for d in dictList:
+            x.append(int(d[coordiante_x]))
+        x = sorted(list(set(x)))
+        x = [str(val) for val in x]
+        for date in x:
+            sum = 0
+            for d in dictList:
+                if io == 'out':
+                    if d[coordiante_x] == date and float(d[coordinate_y]) < 0:
+                        sum += float(d[coordinate_y]) * -1
+                elif io == 'in':
+                    if d[coordiante_x] == date and float(d[coordinate_y]) > 0:
+                        sum += float(d[coordinate_y])
+                else:
+                    return 0
+            y.append(sum)
+        x = [int(val) for val in x]
+        dataList2d.append(x)
+        dataList2d.append(y)
+        return dataList2d
+    elif (coordiante_x, coordinate_y) == ('type', 'money') and io == 'out':
+        x = []
+        y = []
+        for d in dictList:
+            type = int(d[coordiante_x])
+            if type != -1:
+                x.append(type)
+        x = sorted(list(set(x)))
+        x = [str(val) for val in x]
+        for type in x:
+            sum = 0
+            for d in dictList:
+                if d[coordiante_x] == type:
+                    sum += float(d[coordinate_y]) * -1
+            y.append(sum)
+        x = [int(val) for val in x]
+        dataList2d.append(x)
+        dataList2d.append(y)
+        return dataList2d
+    elif (coordiante_x, coordinate_y) == ('time', 'type') and io == 'out':
+        x = []
+        y = []
+        t = []
+        for d in dictList:
+            x.append(int(d[coordiante_x]))
+            type = int(d[coordinate_y])
+            if type != -1:
+                t.append(type)
+        x = sorted(list(set(x)))
+        x = [str(val) for val in x]
+        t = sorted(list(set(t)))
+        t = [str(val) for val in t]
+        for date in x:
+            maxtype = 0
+            max = 0
+            for type in t:
+                sum = 0
+                for d in dictList:
+                    if d[coordinate_y] == type and d[coordiante_x] == date:
+                        sum += float(d['money']) * -1
+                if sum > max:
+                    max = sum
+                    maxtype = type
+            y.append(maxtype)
+        x = [int(val) for val in x]
+        dataList2d.append(x)
+        dataList2d.append(y)
+        return dataList2d
+    else:
+        return 0
+
 

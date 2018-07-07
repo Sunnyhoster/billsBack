@@ -1,14 +1,10 @@
 import pandas as pd
 from sklearn.neural_network import MLPRegressor
 import operator
+import BillsApp.function as fun
 
-data_csv = pd.read_csv('./prediction/simulation_2.csv')
 
-moneyList = list([int(val) for val in data_csv['money']])
-typeList = list([int(val) for val in data_csv['type']])
-moodList = list([int(val) for val in data_csv['mood']])
-
-def showType(x=typeList, y=moodList):
+def showType(x, y):
     x_list = x[:]
     x = [list([val]) for val in x_list]
     rgr = MLPRegressor()
@@ -29,16 +25,30 @@ def showType(x=typeList, y=moodList):
     return top3, bottom3
 
 
-def showMoney(x=typeList, y=moneyList):
-    x_list = x[:]
-    x = [list([val]) for val in x_list]
+def showMoney(xType, xMood, y):
+    x = [list([xType[i], xMood[i]]) for i in range(len(xType))]
     rgr = MLPRegressor()
     rgr.fit(x, y)
-    x_list = list(set(x_list))
-    x = [list([val]) for val in x_list]
-    prediction = rgr.predict(x)
+    test_x = []
     d = {}
-    for i in range(len(x)):
-        d[x_list[i]] = str(int(prediction[i]))
+    for xt in set(xType):
+        d[xt] = {}
+        for xm in set(xMood):
+            d[xt][xm] = str(int(rgr.predict([[xt,xm]])))
     return d
+
+
+def returnAllList(username):
+    dictList = fun.allBills(username)
+    if dictList == 0:return 0
+    else:
+        moneyList = []
+        moodList = []
+        typeList = []
+        for d in dictList:
+            if d['type'] != '-1':
+                moneyList.append(int(d['money'])*-1)
+                moodList.append(int(d['mood']))
+                typeList.append(int(d['type']))
+    return moneyList, moodList, typeList
 

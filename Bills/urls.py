@@ -28,4 +28,6 @@ urlpatterns = [
     url('bill_list/delete_bill/', views.deleteBills),
     url('image/', views.sendImage),
     url('prediction/', views.consumePrediction),
+    url('writeoff/',views.writeOffUser),
+    url('init/',views.init),
 ]

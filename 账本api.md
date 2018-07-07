@@ -35,25 +35,23 @@
 
 ###### 实例:
 
-```javascript
-{
-   "bill": [
-       {
-           "time":"20170701",
-           "money":"200",
-           "type":"学习",
-           "remark":"买了CSAPP",
-           "mood":"1"
-       },
-       {
-           "time":"20170702",
-           "money":"100",
-           "type":"餐饮",
-           "remark":"吃撑了",
-           "mood":"2"
-       }
-    ]
-};
+```json
+[
+	{
+        "time":"20170701",
+        "money":"200",
+        "type":"学习",
+        "remark":"买了CSAPP",
+        "mood":"1"
+    },
+    {
+        "time":"20170702",
+        "money":"100",
+        "type":"餐饮",
+        "remark":"吃撑了",
+        "mood":"2"
+    }
+]
 ```
 
 #### 字段说明:
@@ -113,7 +111,7 @@
 | username   | string   | 用户名              | 是       |
 | time   | string   | 记账时间              | 是       |
 | money  | string   | 金额                  | 是       |
-| type   | string   | 账目类型              | 是       |
+| type   | string   | 账目类型              | 是     |
 | remark | string   | 备注                  | 否       |
 | mood   | string   | 心情级别(分1、2、3级) | 否       |
 
@@ -160,15 +158,20 @@
 {
     "error":"username do not exist"
 }
+
+{
+    "error"："type and money error"
+}
 ```
 
 #### 字段说明
 
-| 字段  | 属性                  | 数据类型 | 说明             |
-| ----- | --------------------- | -------- | ---------------- |
-| error | something absent      | string   | post部分数据缺失 |
-| error | not post              | string   | 方法不是post     |
-| error | username do not exist | string   | 用户名不存在     |
+| 字段  | 属性                  | 数据类型 | 说明                   |
+| ----- | --------------------- | -------- | ---------------------- |
+| error | something absent      | string   | post部分数据缺失       |
+| error | not post              | string   | 方法不是post           |
+| error | username do not exist | string   | 用户名不存在           |
+| error | type and money error  | string   | 金额符号与type匹配错误 |
 
 
 
@@ -193,7 +196,7 @@
 | username       | string   | 用户名             | 是       |
 | time       | string   | 记账时间，具体到日             | 是       |
 | money      | string   | 金额                           | 是       |
-| type       | string   | 记账类型                       | 是       |
+| type       | string   | 记账类型                       | 是     |
 | new_money  | string   | 更新的金额                     | 否       |
 | new_type   | string   | 更新的账目类型                 | 否       |
 | new_remark | string   | 更新的备注                     | 否       |
@@ -241,15 +244,20 @@
 {
     "error":"username do not exist"
 }
+
+{
+    "error"："type and money error"
+}
 ```
 
 #### 字段说明
 
-| 字段  | 属性                  | 数据类型 | 说明             |
-| ----- | --------------------- | -------- | ---------------- |
-| error | something absent      | string   | post部分数据缺失 |
-| error | not post              | string   | 方法不是post     |
-| error | username do not exist | string   | 用户名不存在     |
+| 字段  | 属性                  | 数据类型 | 说明                   |
+| ----- | --------------------- | -------- | ---------------------- |
+| error | something absent      | string   | post部分数据缺失       |
+| error | not post              | string   | 方法不是post           |
+| error | username do not exist | string   | 用户名不存在           |
+| error | type and money error  | string   | 金额符号与type匹配错误 |
 
 
 
@@ -274,7 +282,7 @@
 | username  | 用户名           | 是       |
 | time  | 要删除的账单的时间           | 是       |
 | money | 金额                         | 是       |
-| type  | 账目类型                     | 是       |
+| type  | 账目类型                     | 是     |
 
 #### Response
 
@@ -428,6 +436,59 @@
 | error | not post         | string   | 方法不是post     |
 | error | something absent | string   | post部分数据缺失 |
 
+## 注销
+
+### path
+
+```http 
+/writeoff/
+```
+
+### method
+
+```http
+[GET]
+```
+
+### 参数说明
+
+| 参数     | 说明   | 是否必须 | 数据类型 |
+| -------- | ------ | -------- | -------- |
+| username | 用户名 | 是       | string   |
+
+### response
+
+示例
+
+```json
+{
+    "result":"1"
+}
+```
+
+| 字段   | 数据类型 | 说明                  |
+| ------ | -------- | --------------------- |
+| result | string   | "1"成功,"0"无此用户名 |
+
+#### 错误反馈
+
+```json
+{
+    "error":"something absent"
+}
+
+{
+    "error":"not post"
+}
+```
+
+#### 字段说明
+
+| 字段  | 属性             | 数据类型 | 说明             |
+| ----- | ---------------- | -------- | ---------------- |
+| error | not post         | string   | 方法不是post     |
+| error | something absent | string   | post部分数据缺失 |
+
 ## 数据图
 
 ### path
@@ -452,15 +513,17 @@
 |coordinate_y  | y坐标对象   | 是    |  string|
 |type          | 数据图类型 |  是    |  string|
 |color         | 颜色       | 否     | string|
-|date_start    | 开始日期    | 是    |  string|
-|date_end      | 结束日期   |  是    |  string|
+|month    | 月份  | 是   | string |
+|io | 收入或支出 | 是 | string |
 
 | 特殊说明                                                     |
 | ------------------------------------------------------------ |
 | x,y坐标对象只可从['time','money','type']中选择。             |
+| (x,y)搭配限制为:[('time', 'money'), ('type', 'money'), ('time', 'type')]。其中('type', 'money')和('time', 'type')的io只可为‘out’。 |
 | type只可从['bar','line','pie']中选择，分别对应柱状图、折线图、饼图。 |
 | color只可从['red','blue','green','gray','black','yellow','purple','orange']中选择，其中饼图color无效，柱状图和折线图必须要color。 |
-| date_start 和 date_end 与 time 同一格式。                    |
+| month形如’201807‘。                                          |
+| io为['in', 'out']之一。                                      |
 
 ### response
 
@@ -492,6 +555,10 @@
 {
     "error":"coordinate error"
 }
+
+{
+    "error":"io error"
+}
 ```
 
 #### 字段说明
@@ -504,6 +571,7 @@
 | error | color error           | string   | 颜色超出选择范围       |
 | error | type error            | string   | 数据图类型超出选择范围 |
 | error | coordinate error      | string   | 坐标选择错误           |
+| error | io error              | string   | 收入支出选择错误       |
 
 ## 消费分析预测
 
