@@ -78,7 +78,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'BillsMysql',    ## 数据库名称
         'USER': 'root',
-        'PASSWORD': '15158743502',    ## 安装 mysql 数据库时，输入的 root 用户的密码
+        'PASSWORD': 'wode1mima',    ## 安装 mysql 数据库时，输入的 root 用户的密码
         'HOST': '127.0.0.1',
     }
 }
@@ -121,3 +121,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#bootstrape配置
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
